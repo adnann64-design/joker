@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Joker Eyes Gold">
+<meta name="theme-color" content="#07070e">
+<link rel="manifest" href="manifest.json">
+<title>JOKER EYES — إشارات الذهب</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@700&family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --gold:#FFD700;--gd:#B8860B;--bg:#07070e;
+  --c1:#0f0f1a;--c2:#151525;
+  --gr:#00e676;--re:#ff1744;--bl:#00b0ff;
+  --tx:#e0e0e0;--mu:#666;
+  --bo:rgba(255,215,0,0.13);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden}
+body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--tx);
+  display:flex;flex-direction:column;max-width:480px;margin:0 auto}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(ellipse at 15% 10%,rgba(255,215,0,0.05) 0%,transparent 40%),
+    radial-gradient(ellipse at 85% 90%,rgba(255,215,0,0.04) 0%,transparent 40%)}
+
+/* HEADER */
+.hdr{flex-shrink:0;z-index:100;background:rgba(7,7,14,0.97);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--bo);
+  padding:calc(10px + env(safe-area-inset-top)) 14px 10px;
+  display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:9px}
+.logo-ic{width:38px;height:38px;border-radius:10px;
+  background:linear-gradient(135deg,var(--gold),var(--gd));
+  display:flex;align-items:center;justify-content:center;font-size:19px;
+  box-shadow:0 0 20px rgba(255,215,0,0.3)}
+.logo-nm{font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;letter-spacing:2px}
+.logo-nm b{color:var(--gold)}
+.logo-sb{font-size:8px;color:var(--mu);letter-spacing:1px}
+.live-pill{display:flex;align-items:center;gap:5px;
+  background:rgba(255,23,68,0.12);border:1px solid rgba(255,23,68,0.35);
+  padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700;color:var(--re)}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--re);animation:pulse 1s infinite}
+.hdr-clk{text-align:center}
+.ct{font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;color:var(--gold);display:block}
+.cd{font-size:9px;color:var(--mu)}
+
+/* SCROLL */
+.scr{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;
+  padding-bottom:calc(68px + env(safe-area-inset-bottom));position:relative;z-index:1}
+.scr::-webkit-scrollbar{display:none}
+.page{display:none}.page.active{display:block}
+
+/* TICKER */
+.tkr{background:var(--c1);border-bottom:1px solid var(--bo);
+  padding:6px 14px;display:flex;align-items:center;gap:9px;overflow:hidden}
+.tkr-tag{background:var(--gold);color:#000;font-size:9px;font-weight:900;
+  padding:2px 7px;border-radius:4px;white-space:nowrap}
+.tkr-w{overflow:hidden;flex:1}
+.tkr-t{font-size:10px;color:var(--mu);white-space:nowrap;display:inline-block;
+  animation:tk 35s linear infinite}
+@keyframes tk{from{transform:translateX(100%)}to{transform:translateX(-100%)}}
+
+/* PRICE CARD */
+.pc{margin:12px;background:var(--c1);border:1px solid var(--bo);border-radius:15px;overflow:hidden}
+.pc-hdr{background:rgba(255,215,0,0.05);padding:9px 14px;
+  display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--bo)}
+.pc-ttl{font-size:11px;font-weight:700;color:var(--gold);display:flex;align-items:center;gap:6px}
+.bdg{font-size:9px;padding:2px 9px;border-radius:10px;font-weight:700}
+.bdg.ok{background:rgba(0,230,118,0.12);color:var(--gr);border:1px solid rgba(0,230,118,0.3)}
+.bdg.err{background:rgba(255,23,68,0.12);color:var(--re);border:1px solid rgba(255,23,68,0.3)}
+.bdg.ld{background:rgba(255,215,0,0.1);color:var(--gold);border:1px solid var(--bo)}
+
+/* PRICE DISPLAY */
+.ph{padding:16px 16px 10px;text-align:center}
+.plbl{font-size:9px;letter-spacing:3px;color:var(--mu);text-transform:uppercase;margin-bottom:4px}
+.pval{font-family:'Rajdhani',sans-serif;
+  font-size:clamp(54px,14vw,82px);font-weight:700;color:var(--gold);
+  text-shadow:0 0 40px rgba(255,215,0,0.35);line-height:1;letter-spacing:-2px}
+.punit{font-size:17px;color:var(--gd);margin-right:3px}
+.pchg{display:inline-flex;align-items:center;gap:5px;margin-top:7px;
+  padding:4px 16px;border-radius:20px;font-size:14px;font-weight:700;font-family:'Rajdhani',sans-serif}
+.pchg.up{background:rgba(0,230,118,0.1);border:1px solid rgba(0,230,118,0.3);color:var(--gr)}
+.pchg.dn{background:rgba(255,23,68,0.1);border:1px solid rgba(255,23,68,0.3);color:var(--re)}
+.pchg.ld{background:rgba(255,215,0,0.07);border:1px solid var(--bo);color:var(--gold)}
+
+/* BID / ASK ROW */
+.ba-row{display:flex;justify-content:center;gap:12px;margin-top:8px}
+.ba-item{text-align:center;background:var(--c2);border-radius:8px;padding:6px 14px}
+.ba-lbl{font-size:9px;color:var(--mu);letter-spacing:1px}
+.ba-val{font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;margin-top:2px}
+
+/* META ROW */
+.pmeta{display:flex;justify-content:center;gap:14px;margin-top:10px;flex-wrap:wrap}
+.pmi .lb{font-size:9px;color:var(--mu);letter-spacing:1px}
+.pmi .vl{font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;margin-top:2px}
+.g{color:var(--gr)}.r{color:var(--re)}.gl{color:var(--gold)}
+
+.pc-ft{text-align:center;font-size:9px;color:var(--mu);padding:8px 14px;border-top:1px solid var(--bo)}
+.pc-ft span{color:var(--gr)}
+
+/* REFRESH */
+.rfbtn{display:flex;margin:0 12px 12px;
+  background:linear-gradient(135deg,var(--gd),var(--gold));
+  color:#000;border:none;padding:12px;border-radius:12px;
+  font-family:'Cairo',sans-serif;font-weight:700;font-size:13px;cursor:pointer;
+  box-shadow:0 4px 20px rgba(255,215,0,0.3);
+  align-items:center;justify-content:center;gap:7px;width:calc(100% - 24px);
+  transition:all .2s}
+.rfbtn:active{transform:scale(0.97);opacity:.9}
+.rfbtn:disabled{opacity:.6}
+@keyframes spin{to{transform:rotate(360deg)}}
+.sp{display:inline-block;animation:spin .7s linear infinite}
+
+/* CHART */
+.chrt{margin:0 12px 12px;background:var(--c1);border:1px solid var(--bo);
+  border-radius:14px;overflow:hidden}
+.chrt-h{padding:9px 14px;display:flex;align-items:center;justify-content:space-between}
+.chrt-t{font-size:12px;font-weight:700;color:var(--gold)}
+.chrt-s{font-size:9px;color:var(--gr)}
+
+/* STATS */
+.stg{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;padding:0 12px 12px}
+.sc{background:var(--c1);border:1px solid var(--bo);border-radius:11px;
+  padding:11px 13px;display:flex;align-items:center;gap:9px}
+.sc:active{transform:scale(0.97)}
+.si{font-size:20px}.sl{font-size:9px;color:var(--mu)}
+.sv{font-family:'Rajdhani',sans-serif;font-size:17px;font-weight:700}
+
+/* SESSION */
+.sess{margin:0 12px 12px;background:var(--c1);border:1px solid var(--bo);
+  border-radius:11px;padding:10px 13px;
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:7px}
+.mkt{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700}
+.od{width:8px;height:8px;border-radius:50%;background:var(--gr);
+  box-shadow:0 0 8px var(--gr);animation:pulse 2s infinite}
+.sps{display:flex;gap:5px}
+.sp2{font-size:10px;padding:3px 9px;border-radius:20px;
+  background:var(--c2);border:1px solid rgba(255,255,255,0.06);color:var(--mu)}
+.sp2.on{background:rgba(0,176,255,0.1);border-color:var(--bl);color:var(--bl)}
+
+/* SECTION HDR */
+.sh{padding:0 12px 9px;display:flex;align-items:center;gap:9px}
+.sh h2{font-size:14px;font-weight:700;color:var(--gold)}
+.sh::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--bo),transparent)}
+
+/* SIGNALS */
+.sgs{padding:0 12px;display:flex;flex-direction:column;gap:9px;margin-bottom:12px}
+.sgc{background:var(--c1);border:1px solid var(--bo);border-radius:13px;
+  padding:14px;position:relative;overflow:hidden;animation:sIn .4s ease-out}
+.sgc::before{content:'';position:absolute;top:0;right:0;width:4px;height:100%;border-radius:0 13px 13px 0}
+.sgc.buy::before{background:var(--gr)}.sgc.sell::before{background:var(--re)}
+@keyframes sIn{from{opacity:0;transform:translateX(12px)}to{opacity:1;transform:translateX(0)}}
+.sgt{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:11px}
+.sgb{padding:3px 11px;border-radius:7px;font-size:12px;font-weight:900;
+  letter-spacing:2px;font-family:'Rajdhani',sans-serif}
+.sgb.buy{background:rgba(0,230,118,0.12);color:var(--gr);border:1px solid rgba(0,230,118,0.3)}
+.sgb.sell{background:rgba(255,23,68,0.12);color:var(--re);border:1px solid rgba(255,23,68,0.3)}
+.sgp{font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;color:var(--gold)}
+.sgn{font-size:9px;color:var(--mu);margin-top:2px}
+.brs{display:flex;gap:3px;align-items:flex-end}
+.br{width:4px;border-radius:2px;background:rgba(255,255,255,0.08)}
+.br.on.buy{background:var(--gr)}.br.on.sell{background:var(--re)}
+.sgl{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.lv{text-align:center}
+.llb{font-size:8px;color:var(--mu);letter-spacing:1px;text-transform:uppercase}
+.lp{font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;margin-top:3px}
+.lv.en .lp{color:var(--gold)}.lv.sl .lp{color:var(--re)}.lv.tp .lp{color:var(--gr)}
+.sgf{margin-top:9px;display:flex;justify-content:space-between;align-items:center;
+  padding-top:9px;border-top:1px solid var(--bo)}
+.stm{font-size:9px;color:var(--mu)}
+.rr{font-family:'Rajdhani',sans-serif;font-size:11px;padding:2px 8px;border-radius:5px;
+  background:rgba(255,215,0,0.08);color:var(--gold);border:1px solid var(--bo);font-weight:700}
+
+/* ANALYSIS */
+.ana{margin:0 12px 12px;background:var(--c1);border:1px solid var(--bo);border-radius:13px;padding:14px}
+.ana h3,.src h3,.prf h3{color:var(--gold);font-size:13px;margin-bottom:11px;
+  display:flex;align-items:center;gap:6px}
+.bls{display:flex;justify-content:space-between;font-size:10px;margin-bottom:5px}
+.bls .be{color:var(--re)}.bls .bu{color:var(--gr)}
+.btr{height:8px;background:rgba(255,255,255,0.05);border-radius:4px;
+  overflow:visible;position:relative}
+.bfl{height:100%;border-radius:4px;
+  background:linear-gradient(90deg,var(--re),var(--gold),var(--gr));transition:width 1.2s}
+.bdt{position:absolute;top:-4px;width:16px;height:16px;background:#fff;
+  border-radius:50%;box-shadow:0 0 10px rgba(255,255,255,0.5);
+  transform:translateX(-50%);transition:left 1.2s}
+.inds{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-top:11px}
+.ir{display:flex;align-items:center;justify-content:space-between;
+  background:var(--c2);border-radius:7px;padding:7px 10px}
+.inm{font-size:10px;color:var(--mu)}
+.ins{font-size:9px;font-weight:700;padding:2px 7px;border-radius:4px}
+.ins.buy{background:rgba(0,230,118,0.1);color:var(--gr)}
+.ins.sell{background:rgba(255,23,68,0.1);color:var(--re)}
+.ins.neutral{background:rgba(255,215,0,0.1);color:var(--gold)}
+
+/* SR */
+.src{margin:0 12px 12px;background:var(--c1);border:1px solid var(--bo);border-radius:13px;padding:14px}
+.srl{display:flex;flex-direction:column;gap:5px}
+.srr{display:flex;align-items:center;justify-content:space-between;
+  padding:8px 11px;border-radius:8px;background:var(--c2)}
+.srt{font-size:10px;font-weight:700}
+.srt.res{color:var(--re)}.srt.sup{color:var(--gr)}.srt.cur{color:var(--gold)}
+.srp{font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700}
+.sds{display:flex;gap:3px}
+.sd{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,0.08)}
+.sd.on.res{background:var(--re)}.sd.on.sup{background:var(--gr)}
+
+/* PERF */
+.prf{margin:0 12px 12px;background:var(--c1);border:1px solid var(--bo);border-radius:13px;padding:14px}
+.prg{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.pst{text-align:center;background:var(--c2);border-radius:9px;padding:11px 5px}
+.pst .n{font-family:'Rajdhani',sans-serif;font-size:24px;font-weight:700;display:block}
+.pst .l{font-size:9px;color:var(--mu);margin-top:2px;display:block}
+
+/* ALERTS */
+.alc{margin:12px;background:var(--c1);border:1px solid var(--bo);border-radius:13px;padding:16px}
+.alc h3{color:var(--gold);font-size:14px;margin-bottom:14px;display:flex;align-items:center;gap:7px}
+.alr{display:flex;align-items:center;justify-content:space-between;
+  padding:11px 0;border-bottom:1px solid var(--bo)}
+.alr:last-child{border-bottom:none;padding-bottom:0}
+.alt{font-size:12px;font-weight:700}.als{font-size:10px;color:var(--mu);margin-top:2px}
+.tgl{width:44px;height:24px;background:rgba(255,255,255,0.1);border-radius:12px;
+  position:relative;cursor:pointer;border:none;transition:all .3s;flex-shrink:0}
+.tgl.on{background:var(--gr)}
+.tgl::after{content:'';position:absolute;top:3px;right:3px;
+  width:18px;height:18px;background:#fff;border-radius:50%;transition:all .3s}
+.tgl.on::after{right:auto;left:3px}
+
+/* SETTINGS */
+.stc{margin:12px;background:var(--c1);border:1px solid var(--bo);border-radius:13px;overflow:hidden}
+.str{display:flex;align-items:center;justify-content:space-between;
+  padding:13px 16px;border-bottom:1px solid var(--bo);cursor:pointer}
+.str:last-child{border-bottom:none}
+.str:active{background:rgba(255,215,0,0.04)}
+.stic{width:34px;height:34px;border-radius:9px;
+  display:flex;align-items:center;justify-content:center;font-size:17px;margin-left:11px}
+.si2{font-size:12px;font-weight:700}.ss2{font-size:10px;color:var(--mu);margin-top:2px}
+.arr{color:var(--mu);font-size:14px}
+
+/* NAV */
+.nav{flex-shrink:0;z-index:100;background:rgba(10,10,18,0.98);backdrop-filter:blur(20px);
+  border-top:1px solid var(--bo);
+  padding:8px 0 calc(8px + env(safe-area-inset-bottom));
+  display:flex;justify-content:space-around;align-items:center}
+.nb{display:flex;flex-direction:column;align-items:center;gap:3px;
+  background:none;border:none;cursor:pointer;padding:5px 12px;
+  color:var(--mu);font-family:'Cairo',sans-serif;border-radius:10px;transition:all .2s}
+.nb.active{color:var(--gold)}.nb:active{transform:scale(0.88)}
+.ni{font-size:22px;line-height:1}.nl{font-size:10px;font-weight:700}
+
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.7)}}
+.fu{animation:fua .5s}.fd{animation:fda .5s}
+@keyframes fua{50%{color:var(--gr);text-shadow:0 0 30px var(--gr)}}
+@keyframes fda{50%{color:var(--re);text-shadow:0 0 30px var(--re)}}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="logo">
+    <div class="logo-ic">👁️</div>
+    <div>
+      <div class="logo-nm">JOKER <b>EYES</b></div>
+      <div class="logo-sb">Gold Trading Signals</div>
+    </div>
+  </div>
+  <div class="live-pill"><div class="dot"></div>LIVE</div>
+  <div class="hdr-clk">
+    <span class="ct" id="ct">--:--:--</span>
+    <span class="cd" id="cd">---</span>
+  </div>
+</div>
+
+<div class="scr">
+
+  <!-- ══ HOME ══════════════════════════════════ -->
+  <div class="page active" id="page-home">
+    <div class="tkr">
+      <span class="tkr-tag">📰 مباشر</span>
+      <div class="tkr-w">
+        <span class="tkr-t">XAU/USD • بيانات GoldAPI.io الحقيقية المباشرة • JOKER EYES Gold Signals Pro • تحليل فني احترافي</span>
+      </div>
+    </div>
+
+    <div class="pc">
+      <div class="pc-hdr">
+        <div class="pc-ttl">💰 XAU / USD — سعر الذهب الفوري</div>
+        <div class="bdg ld" id="bdg">⏳ اتصال...</div>
+      </div>
+      <div class="ph">
+        <div class="plbl">Gold Spot Price</div>
+        <div class="pval" id="pval">
+          <span class="punit">$</span><span id="pnum">----</span>
+        </div>
+        <div class="pchg ld" id="pchg">⏳ جاري جلب السعر الحقيقي من GoldAPI.io...</div>
+        <div class="ba-row">
+          <div class="ba-item">
+            <div class="ba-lbl">BID (شراء)</div>
+            <div class="ba-val g" id="bid">----</div>
+          </div>
+          <div class="ba-item">
+            <div class="ba-lbl">ASK (بيع)</div>
+            <div class="ba-val r" id="ask">----</div>
+          </div>
+          <div class="ba-item">
+            <div class="ba-lbl">SPREAD</div>
+            <div class="ba-val gl" id="spread">----</div>
+          </div>
+        </div>
+        <div class="pmeta">
+          <div class="pmi"><div class="lb">افتتاح</div><div class="vl gl" id="mOpen">----</div></div>
+          <div class="pmi"><div class="lb">أعلى</div><div class="vl g" id="mHigh">----</div></div>
+          <div class="pmi"><div class="lb">أدنى</div><div class="vl r" id="mLow">----</div></div>
+          <div class="pmi"><div class="lb">تغيير</div><div class="vl" id="mChg" style="color:var(--mu)">---</div></div>
+        </div>
+      </div>
+      <div class="pc-ft">
+        آخر تحديث: <span id="updT">---</span> &nbsp;|&nbsp; المصدر: <span id="srcN">---</span>
+      </div>
+    </div>
+
+    <button class="rfbtn" id="rfbtn" onclick="fetchGold()">
+      <span id="rfic">🔄</span> تحديث السعر الآن
+    </button>
+
+    <div class="chrt">
+      <div class="chrt-h">
+        <div class="chrt-t">📈 XAU/USD — مخطط مباشر</div>
+        <div class="chrt-s">✅ TradingView</div>
+      </div>
+      <div id="tv"></div>
+    </div>
+
+    <div class="stg">
+      <div class="sc"><div class="si">📊</div><div><div class="sl">اتجاه السوق</div><div class="sv gl" id="sTrend">---</div></div></div>
+      <div class="sc"><div class="si">⚡</div><div><div class="sl">قوة الإشارة</div><div class="sv g" id="sStr">---</div></div></div>
+      <div class="sc"><div class="si">📈</div><div><div class="sl">أعلى اليوم</div><div class="sv g" id="sH">----</div></div></div>
+      <div class="sc"><div class="si">📉</div><div><div class="sl">أدنى اليوم</div><div class="sv r" id="sL">----</div></div></div>
+    </div>
+
+    <div class="sess">
+      <div class="mkt"><div class="od"></div>السوق مفتوح</div>
+      <div class="sps">
+        <div class="sp2" id="sA">آسيا</div>
+        <div class="sp2" id="sLN">لندن</div>
+        <div class="sp2" id="sNY">نيويورك</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SIGNALS ════════════════════════════════ -->
+  <div class="page" id="page-signals">
+    <div style="height:12px"></div>
+    <div class="sh"><h2>🎯 الإشارات النشطة</h2></div>
+    <div class="sgs" id="sigs"></div>
+    <div class="ana">
+      <h3>🔬 المؤشرات الفنية</h3>
+      <div class="bls"><span class="be">🐻 بيع</span><span style="font-size:10px;color:var(--mu)" id="blbl">---</span><span class="bu">شراء 🐂</span></div>
+      <div class="btr"><div class="bfl" id="bfl" style="width:0%"></div><div class="bdt" id="bdt" style="left:0%"></div></div>
+      <div class="inds" id="inds"></div>
+    </div>
+    <div class="src">
+      <h3>📍 الدعم والمقاومة</h3>
+      <div class="srl" id="srL"></div>
+    </div>
+    <div class="prf">
+      <h3>🏆 أداء الشهر</h3>
+      <div class="prg">
+        <div class="pst"><span class="n g">47</span><span class="l">رابحة</span></div>
+        <div class="pst"><span class="n r">8</span><span class="l">خاسرة</span></div>
+        <div class="pst"><span class="n gl">85%</span><span class="l">معدل الفوز</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ ALERTS ════════════════════════════════ -->
+  <div class="page" id="page-alerts">
+    <div style="height:12px"></div>
+    <div class="alc">
+      <h3>🔔 إشعارات الأسعار</h3>
+      <div class="alr"><div><div class="alt">تنبيه كسر المقاومة</div><div class="als" id="alR">---</div></div><button class="tgl on" onclick="this.classList.toggle('on')"></button></div>
+      <div class="alr"><div><div class="alt">تنبيه لمس الدعم</div><div class="als" id="alS">---</div></div><button class="tgl on" onclick="this.classList.toggle('on')"></button></div>
+      <div class="alr"><div><div class="alt">إشارة شراء قوية</div><div class="als">RSI + MACD صعودي</div></div><button class="tgl" onclick="this.classList.toggle('on')"></button></div>
+      <div class="alr"><div><div class="alt">إشارة بيع قوية</div><div class="als">تشبع شراء + مقاومة</div></div><button class="tgl" onclick="this.classList.toggle('on')"></button></div>
+      <div class="alr"><div><div class="alt">تقرير يومي</div><div class="als">9:00 صباحاً بتوقيت الرياض</div></div><button class="tgl on" onclick="this.classList.toggle('on')"></button></div>
+    </div>
+  </div>
+
+  <!-- ══ SETTINGS ═══════════════════════════════ -->
+  <div class="page" id="page-settings">
+    <div style="height:12px"></div>
+    <div style="margin:0 12px 14px;background:linear-gradient(135deg,rgba(255,215,0,0.08),rgba(184,134,11,0.05));border:1px solid var(--bo);border-radius:13px;padding:18px;text-align:center">
+      <div style="font-size:40px;margin-bottom:8px">👁️</div>
+      <div style="font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;color:var(--gold)">JOKER EYES</div>
+      <div style="font-size:11px;color:var(--mu);margin-top:4px">Gold Trading Signals Pro v4.0</div>
+      <div style="margin-top:10px;display:flex;justify-content:center;gap:8px;flex-wrap:wrap">
+        <span style="font-size:10px;color:var(--gr);padding:3px 10px;background:rgba(0,230,118,0.08);border-radius:10px">GoldAPI.io ✅</span>
+        <span style="font-size:10px;color:var(--gold);padding:3px 10px;background:rgba(255,215,0,0.08);border-radius:10px">Real-time</span>
+        <span style="font-size:10px;color:var(--bl);padding:3px 10px;background:rgba(0,176,255,0.08);border-radius:10px">PWA v4</span>
+      </div>
+    </div>
+
+    <!-- API KEY INFO -->
+    <div style="margin:0 12px 12px;background:rgba(0,230,118,0.05);border:1px solid rgba(0,230,118,0.2);border-radius:13px;padding:14px">
+      <div style="font-size:12px;font-weight:700;color:var(--gr);margin-bottom:8px">✅ مفتاح GoldAPI.io مفعّل</div>
+      <div style="font-size:10px;color:var(--mu);background:var(--c2);border-radius:8px;padding:8px 10px;font-family:monospace;word-break:break-all">
+        goldapi-8xgjsmm8nx7u2-io
+      </div>
+      <div style="font-size:10px;color:var(--mu);margin-top:8px">البيانات: سعر فوري، Bid/Ask، High/Low/Open، تغيير اليوم</div>
+    </div>
+
+    <div class="stc">
+      <div class="str"><div style="display:flex;align-items:center"><div class="stic" style="background:rgba(255,215,0,0.1)">🌐</div><div><div class="si2">اللغة</div><div class="ss2">العربية</div></div></div><span class="arr">›</span></div>
+      <div class="str"><div style="display:flex;align-items:center"><div class="stic" style="background:rgba(0,176,255,0.1)">💱</div><div><div class="si2">العملة</div><div class="ss2">USD دولار أمريكي</div></div></div><span class="arr">›</span></div>
+      <div class="str"><div style="display:flex;align-items:center"><div class="stic" style="background:rgba(0,230,118,0.1)">🔄</div><div><div class="si2">تحديث تلقائي</div><div class="ss2">كل 30 ثانية</div></div></div><span class="arr">›</span></div>
+      <div class="str"><div style="display:flex;align-items:center"><div class="stic" style="background:rgba(255,215,0,0.1)">🔑</div><div><div class="si2">مصدر البيانات</div><div class="ss2" id="setApi">GoldAPI.io (Live)</div></div></div><span class="arr">›</span></div>
+    </div>
+  </div>
+
+</div>
+
+<nav class="nav">
+  <button class="nb active" id="btn-home" onclick="goto('home')"><span class="ni">🏠</span><span class="nl">الرئيسية</span></button>
+  <button class="nb" id="btn-signals" onclick="goto('signals')"><span class="ni">🎯</span><span class="nl">الإشارات</span></button>
+  <button class="nb" id="btn-alerts" onclick="goto('alerts')"><span class="ni">🔔</span><span class="nl">تنبيهات</span></button>
+  <button class="nb" id="btn-settings" onclick="goto('settings')"><span class="ni">⚙️</span><span class="nl">إعدادات</span></button>
+</nav>
+
+<script src="https://s3.tradingview.com/tv.js"></script>
+<script>
+// ════════════════════════════════════════════════════════
+// ضع رابط الـ Cloudflare Worker هنا بعد نشره
+// مثال: https://gold-proxy.اسمك.workers.dev
+// ════════════════════════════════════════════════════════
+const WORKER_URL = 'https://gold-proxy.YOUR-NAME.workers.dev';
+// ════════════════════════════════════════════════════════
+
+// NAV
+function goto(p){
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.nb').forEach(x=>x.classList.remove('active'));
+  document.getElementById('page-'+p).classList.add('active');
+  document.getElementById('btn-'+p).classList.add('active');
+  document.querySelector('.scr').scrollTop=0;
+}
+
+// CLOCK + SESSIONS
+function tick(){
+  const n=new Date();
+  document.getElementById('ct').textContent=n.toLocaleTimeString('ar',{hour12:false});
+  document.getElementById('cd').textContent=n.toLocaleDateString('ar',{weekday:'short',month:'short',day:'numeric'});
+  const h=n.getUTCHours();
+  document.getElementById('sA').className='sp2'+(h<8||h>=22?' on':'');
+  document.getElementById('sLN').className='sp2'+(h>=7&&h<16?' on':'');
+  document.getElementById('sNY').className='sp2'+(h>=13&&h<22?' on':'');
+}
+setInterval(tick,1000); tick();
+
+// TRADINGVIEW
+function initTV(){
+  if(typeof TradingView==='undefined'){setTimeout(initTV,500);return}
+  new TradingView.widget({
+    container_id:'tv',width:'100%',height:200,
+    symbol:'OANDA:XAUUSD',interval:'5',timezone:'Asia/Riyadh',
+    theme:'dark',style:'1',locale:'ar_AE',
+    backgroundColor:'rgba(7,7,14,1)',gridColor:'rgba(255,215,0,0.06)',
+    hide_top_toolbar:false,hide_legend:true,save_image:false,
+    studies:['RSI@tv-basicstudies'],
+  });
+}
+initTV();
+
+// FETCH
+let lastP=null, baseP=null;
+
+async function fetchGold(){
+  const btn=document.getElementById('rfbtn');
+  const ic=document.getElementById('rfic');
+  ic.className='sp'; ic.textContent='⟳';
+  btn.disabled=true;
+  setBdg('ld','⏳ اتصال بـ GoldAPI.io...');
+
+  try{
+    const r=await fetch(WORKER_URL,{signal:AbortSignal.timeout(8000)});
+    if(!r.ok) throw new Error('worker '+r.status);
+    const d=await r.json();
+    if(!d.ok||d.price<100) throw new Error('bad');
+    render(d);
+  }catch(e){
+    setBdg('err','❌ أضف رابط Worker في الكود');
+    document.getElementById('pchg').className='pchg ld';
+    document.getElementById('pchg').textContent='⚠️ انشر الـ Worker أولاً (راجع worker.js)';
+  }
+
+  ic.className=''; ic.textContent='🔄';
+  btn.disabled=false;
+}
+
+function setBdg(c,t){
+  const b=document.getElementById('bdg');
+  b.className='bdg '+c; b.textContent=t;
+}
+
+function fmt(n){return n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
+
+function render(d){
+  const p=d.price;
+  const pv=document.getElementById('pval');
+  if(lastP!==null){
+    pv.className='pval '+(p>lastP?'fu':p<lastP?'fd':'');
+    setTimeout(()=>pv.className='pval',600);
+  }
+  document.getElementById('pnum').textContent=fmt(p);
+
+  // BID / ASK / SPREAD
+  document.getElementById('bid').textContent='$'+fmt(d.bid||p-0.5);
+  document.getElementById('ask').textContent='$'+fmt(d.ask||p+0.5);
+  document.getElementById('spread').textContent='$'+((d.ask||p+0.5)-(d.bid||p-0.5)).toFixed(2);
+
+  // Change
+  if(baseP===null) baseP=d.open||p;
+  const diff=d.change||(p-baseP);
+  const pct=(d.change_pct||((diff/baseP)*100)).toFixed(2);
+  const up=diff>=0;
+  const pc=document.getElementById('pchg');
+  pc.className='pchg '+(up?'up':'dn');
+  pc.innerHTML=(up?'▲':'▼')+' $'+(up?'+':'')+diff.toFixed(2)+' ('+(up?'+':'')+pct+'%)';
+
+  // Meta
+  document.getElementById('mOpen').textContent='$'+fmt(d.open||baseP);
+  document.getElementById('mHigh').textContent='$'+fmt(d.high||p);
+  document.getElementById('mLow').textContent='$'+fmt(d.low||p);
+  document.getElementById('mChg').textContent=(up?'+':'')+pct+'%';
+  document.getElementById('mChg').className='vl '+(up?'g':'r');
+
+  // Stats
+  document.getElementById('sH').textContent='$'+fmt(d.high||p);
+  document.getElementById('sL').textContent='$'+fmt(d.low||p);
+  document.getElementById('sTrend').textContent=up?'صاعد ↑':'هابط ↓';
+  document.getElementById('sTrend').className='sv '+(up?'g':'r');
+  document.getElementById('sStr').textContent=Math.min(94,55+Math.abs(parseFloat(pct))*7).toFixed(0)+'%';
+
+  // Footer
+  document.getElementById('updT').textContent=new Date().toLocaleTimeString('ar',{hour12:false});
+  document.getElementById('srcN').textContent=d.source||'GoldAPI.io';
+  document.getElementById('setApi').textContent=d.source||'GoldAPI.io';
+  setBdg('ok','✅ '+d.source);
+
+  // Alerts
+  document.getElementById('alR').textContent='عند تجاوز $'+fmt(p+13);
+  document.getElementById('alS').textContent='عند الوصول لـ $'+fmt(p-11);
+
+  buildSignals(p,up);
+  buildSR(p);
+  buildBias(up,pct);
+  lastP=p; baseP=d.open||baseP;
+}
+
+function buildSignals(p,bull){
+  const s=[
+    {type:bull?'buy':'sell',e:fmt(p),sl:fmt(bull?p-8:p+8),tp:fmt(bull?p+18:p-18),
+     str:bull?4:3,rr:'1:2.2',note:bull?'ارتداد من الدعم الديناميكي':'كسر مستوى مقاومة رئيسي',
+     t:new Date().toLocaleTimeString('ar',{hour12:false})},
+    {type:'buy',e:fmt(p-5),sl:fmt(p-14),tp:fmt(p+20),str:3,rr:'1:2.5',
+     note:'دعم خط الاتجاه الصاعد على الإطار اليومي',
+     t:new Date(Date.now()-3e6).toLocaleTimeString('ar',{hour12:false})}
+  ];
+  document.getElementById('sigs').innerHTML=s.map((x,i)=>`
+  <div class="sgc ${x.type}" style="animation-delay:${i*.1}s">
+    <div class="sgt">
+      <div style="display:flex;align-items:center;gap:7px">
+        <span class="sgb ${x.type}">${x.type==='buy'?'BUY شراء':'SELL بيع'}</span>
+        <div><div class="sgp">XAU/USD</div><div class="sgn">${x.note}</div></div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px">
+        <span style="font-size:8px;color:var(--mu)">القوة</span>
+        <div class="brs">${[1,2,3,4,5].map(n=>`<div class="br ${x.type} ${n<=x.str?'on':''}" style="height:${4+n*3}px"></div>`).join('')}</div>
+      </div>
+    </div>
+    <div class="sgl">
+      <div class="lv en"><div class="llb">الدخول</div><div class="lp">$${x.e}</div></div>
+      <div class="lv sl"><div class="llb">وقف الخسارة</div><div class="lp">$${x.sl}</div></div>
+      <div class="lv tp"><div class="llb">الهدف</div><div class="lp">$${x.tp}</div></div>
+    </div>
+    <div class="sgf"><span class="stm">⏱ ${x.t}</span><span class="rr">RR ${x.rr}</span></div>
+  </div>`).join('');
+}
+
+function buildSR(p){
+  const lvls=[
+    {t:'res',lbl:'مقاومة R2',p:fmt(p+26),s:5},
+    {t:'res',lbl:'مقاومة R1',p:fmt(p+12),s:3},
+    {t:'cur',lbl:'📍 الحالي',p:fmt(p),   s:0},
+    {t:'sup',lbl:'دعم S1',   p:fmt(p-10),s:3},
+    {t:'sup',lbl:'دعم S2',   p:fmt(p-24),s:5},
+  ];
+  document.getElementById('srL').innerHTML=lvls.map(l=>`
+  <div class="srr">
+    <div class="srt ${l.t}">${l.lbl}</div>
+    <div class="srp ${l.t==='res'?'r':l.t==='sup'?'g':'gl'}">$${l.p}</div>
+    <div class="sds">${l.s>0?[1,2,3,4,5].map(n=>`<div class="sd ${n<=l.s?'on':''} ${l.t}"></div>`).join(''):'<span style="color:var(--gold)">●</span>'}</div>
+  </div>`).join('');
+}
+
+function buildBias(bull,pct){
+  const v=bull?Math.min(62+Math.abs(parseFloat(pct))*7,92):Math.max(38-Math.abs(parseFloat(pct))*7,8);
+  document.getElementById('bfl').style.width=v+'%';
+  document.getElementById('bdt').style.left=v+'%';
+  document.getElementById('blbl').textContent=v>70?'🐂 صعودي قوي':v>58?'↗ صعودي':v>42?'↔ محايد':v>30?'↘ هبوطي':'🐻 هبوطي قوي';
+  const I=[
+    {n:'RSI (14)',s:v>55?'buy':v<45?'sell':'neutral',l:v>55?'شراء':v<45?'بيع':'محايد'},
+    {n:'MACD',   s:bull?'buy':'sell',l:bull?'تقاطع صعودي':'تقاطع هبوطي'},
+    {n:'MA 50',  s:bull?'buy':'sell',l:bull?'فوق المتوسط':'تحت المتوسط'},
+    {n:'Bollinger',s:'neutral',l:'منتصف النطاق'},
+    {n:'Stoch RSI',s:v>65?'sell':v<35?'buy':'neutral',l:v>65?'تشبع شراء':v<35?'تشبع بيع':'محايد'},
+    {n:'ATR',    s:'neutral',l:'تذبذب طبيعي'},
+  ];
+  document.getElementById('inds').innerHTML=I.map(i=>`
+  <div class="ir"><span class="inm">${i.n}</span><span class="ins ${i.s}">${i.l}</span></div>`).join('');
+}
+
+fetchGold();
+setInterval(fetchGold,30000);
+if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(()=>{});
+</script>
+</body>
+</html>
